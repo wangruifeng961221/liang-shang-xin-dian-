@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>梁山州远程心电会诊平台</title>
+    <meta name="screen-orientation" content="portrait">
+    <meta name="description" content="">
+    <meta name="x5-orientation" content="portrait">
+    <meta id="metaEle" name="viewport"
+          content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/htmleaf-demo.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/echarts.min.js"></script>
+    <script src="js/digital-clock.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="app">
+    <div class="header"></div>
+    <div class="content">
+        <div class="left">
+            <div class="left_top">
+
+            </div>
+            <div>
+                <span class="title">数据汇总</span>
+                <div class="all_data">
+                    <div class="yxbk yxbk_one">
+                        <img src="images/icon_yljg.png">
+                        <span class="num my_hide">{{dataAnalyse.org_count}}</span>
+                        <span class="tit_yljg">医疗机构</span>
+                    </div>
+                    <div class="yxbk">
+                        <img src="images/icon_cgxdt.png">
+                        <span class="num my_hide">{{dataAnalyse.ecg_count}}</span>
+                        <span class="tit_yljg">常规心电图</span>
+                    </div>
+                    <div class="yxbk">
+                        <img src="images/icon_dtxdt.png">
+                        <span class="num my_hide">{{dataAnalyse.dcg_count}}</span>
+                        <span class="tit_yljg">动态心电图</span>
+                    </div>
+                </div>
+                <span class="title">占比率</span>
+                <div class="zbj">
+                    <div class="zbl_echarts">
+                        <span class="zbl_title">常规心电图报告等级占比</span>
+                        <div class="my_echarts" id="echartsCG"></div>
+                    </div>
+                    <div class="zbl_echarts">
+                        <span class="zbl_title">动态心电图报告等级占比</span>
+                        <div class="my_echarts" id="echartsDT"></div>
+                    </div>
+                    <div class="zbl_echarts">
+                        <span class="zbl_title">心率变异性占比</span>
+                        <div class="my_echarts" id="echartsXL"></div>
+                    </div>
+                </div>
+                <span class="title">数据列表</span>
+                <div class="data_title">
+                    <div class="yljg data_table_title">医疗机构</div>
+                    <div class="yljg_two data_table_title">常规心电图</div>
+                    <div class="yljg_two data_table_title">动态心电图</div>
+                </div>
+                <div id="marquee">
+                    <div id="marquee1" class="table_mar1">
+                        <table>
+                            <tbody>
+                            <tr v-for="(item,index) in dataList" :key="index" :class="index%2==0?'':'blue'">
+                                <td class="yljg_table">{{item.name}}</td>
+                                <td class="cgxdt_table">{{item.ecg_count}}</td>
+                                <td class="cgxdt_table">{{item.dcg_count}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="marquee2" class="table_mar2">
+                        <table>
+                            <tbody>
+                            <tr v-for="(item,index) in dataList" :key="index" :class="index%2==0?'':'blue'">
+                                <td class="yljg_table">{{item.name}}</td>
+                                <td class="cgxdt_table">{{item.ecg_count}}</td>
+                                <td class="cgxdt_table">{{item.dcg_count}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="center_content">
+            <!-- 时间 -->
+            <div class="htmleaf-container">
+                <div class="clock">
+                    <div class="digit year">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                    <div class="digit year">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                    <div class="digit year">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                    <div class="digit year">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                    <div class="digit" style="right: -34.5px;width: 10px">
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment on line"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                    </div>
+                    <div class="digit" style="left: 34.5px;width: 10px">
+                        <div class="segment hide"></div>
+                        <div class="segment line on"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                    </div>
+
+                    <div class="digit month">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="digit month">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                    <div class="digit" style="right: -34.5px;width: 10px">
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment on line"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                    </div>
+                    <div class="digit" style="left: 34.5px;width: 10px">
+                        <div class="segment hide"></div>
+                        <div class="segment line on"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                        <div class="segment hide"></div>
+                    </div>
+
+                    <div class="digit day">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="digit day day_right">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="digit hours">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="digit hours">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="separator"></div>
+                    <div class="separator_two"></div>
+
+                    <div class="digit minutes">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="digit minutes">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="separator"></div>
+                    <div class="separator_two"></div>
+
+                    <div class="digit seconds">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+
+                    <div class="digit seconds">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="center_jgfb">
+                <div class="fbtbj_img">
+                    梁山州医疗机构分布图
+                </div>
+                <div class="map">
+                    <div class="radius" v-for="(item,index) in dot" style="position: absolute" :style="item.dotOut">
+                        <span class="animate-radius" :style="item.dotInn"></span>
+                    </div>
+                </div>
+                <div class="yljg_bg_img">
+                    <ul>
+                        <li>
+                            <div>
+                                <span class="dot dot_red"></span>
+                                <span class="doctor">三级医院</span>
+                                <span class="doctor_num">{{distributionAnalyse.three_level_hospital}}</span>
+                            </div>
+                            <div>
+                                <span class="dot dot_zs"></span>
+                                <span class="doctor">乡镇医院</span>
+                                <span class="doctor_num">{{distributionAnalyse.township_hospital}}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="dot dot_yellow"></span>
+                                <span class="doctor">二级医院</span>
+                                <span class="doctor_num">{{distributionAnalyse.two_level_hospital}}</span>
+                            </div>
+                            <div>
+                                <span class="dot dot_blue"></span>
+                                <span class="doctor">村卫生室</span>
+                                <span class="doctor_num">{{distributionAnalyse.village_health_room}}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="dot dot_lus"></span>
+                                <span class="doctor">一级医院</span>
+                                <span class="doctor_num">{{distributionAnalyse.first_level_hospital}}</span>
+                            </div>
+                            <div>
+                                <span class="dot dot_blue"></span>
+                                <span class="doctor">社区卫生服务中心</span>
+                                <span class="doctor_num">{{distributionAnalyse.community_health_centre}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="right_content">
+            <div class="ndsj_hz">
+
+            </div>
+            <div>
+                <span class="title title_n">数据汇总</span>
+                <div class="all_data">
+                    <div class="yxbk yxbk_one">
+                        <img src="images/icon_yljg.png">
+                        <span class="num my_hide">{{NdataAnalyse.org_count}}</span>
+                        <span class="tit_yljg">医疗机构</span>
+                    </div>
+                    <div class="yxbk">
+                        <img src="images/icon_cgxdt.png">
+                        <span class="num my_hide">{{NdataAnalyse.ecg_count}}</span>
+                        <span class="tit_yljg">常规心电图</span>
+                    </div>
+                    <div class="yxbk">
+                        <img src="images/icon_dtxdt.png">
+                        <span class="num my_hide">{{NdataAnalyse.dcg_count}}</span>
+                        <span class="tit_yljg">动态心电图</span>
+                    </div>
+                </div>
+                <span class="title title_n">占比率</span>
+                <div class="zbj">
+                    <div class="zbl_echarts">
+                        <span class="zbl_title">常规心电图报告等级占比</span>
+                        <div class="my_echarts" id="echartsCGN"></div>
+                    </div>
+                    <div class="zbl_echarts">
+                        <span class="zbl_title">动态心电图报告等级占比</span>
+                        <div class="my_echarts" id="echartsDTN"></div>
+                    </div>
+                    <div class="zbl_echarts">
+                        <span class="zbl_title">心率变异性占比</span>
+                        <div class="my_echarts" id="echartsXLN"></div>
+                    </div>
+                </div>
+                <span class="title title_n">数据列表</span>
+                <div class="data_title">
+                    <div class="yljg data_table_title">医疗机构</div>
+                    <div class="yljg_two data_table_title">常规心电图</div>
+                    <div class="yljg_two data_table_title" style="margin-right: 0">动态心电图</div>
+                </div>
+                <div id="marqueeN">
+                    <div id="marqueeN1" class="table_mar1">
+                        <table>
+                            <tbody>
+                            <tr v-for="(item,index) in dataNList" :key="index" :class="index%2==0?'':'blue'">
+                                <td class="yljg_table">{{item.name}}</td>
+                                <td class="cgxdt_table">{{item.ecg_count}}</td>
+                                <td class="cgxdt_table">{{item.dcg_count}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="marqueeN2" class="table_mar2">
+                        <table>
+                            <tbody>
+                            <tr v-for="(item,index) in dataNList" :key="index" :class="index%2==0?'':'blue'">
+                                <td class="yljg_table">{{item.name}}</td>
+                                <td class="cgxdt_table">{{item.ecg_count}}</td>
+                                <td class="cgxdt_table">{{item.dcg_count}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Tips_content" v-if="flag">请选择一个标签</div>
+</div>
+</body>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                tagId:'',
+                //  地图上显示的点
+                dot:[
+                    {
+                        dotOut:{height:'25px', width:'25px', background:'#ffcc00', top:'300px', left:'590px'},
+                        dotInn:{height:'25px', width:'25px', background:'#ffcc00'}
+                    },
+                    {
+                        dotOut:{height:'15px', width:'15px', background:'#65cbfe', top:'300px', left:'150px'},
+                        dotInn:{height:'15px', width:'15px', background:'#65cbfe'}
+                    },
+                    {
+                        dotOut:{height:'20px', width:'20px', background:'#ff0000', top:'500px', left:'500px'},
+                        dotInn:{height:'20px', width:'20px', background:'#ff0000'}
+                    },
+                    {
+                        dotOut:{height:'10px', width:'10px', background:'#9900ff', top:'266px', left:'166px'},
+                        dotInn:{height:'10px', width:'10px', background:'#9900ff'}
+                    },
+                    {
+                        dotOut:{height:'30px', width:'30px', background:'#22ac38', top:'600px', left:'600px'},
+                        dotInn:{height:'30px', width:'30px', background:'#22ac38'}
+                    },
+                    {
+                        dotOut:{height:'25px', width:'25px', background:'#65cbfe', top:'700px', left:'600px'},
+                        dotInn:{height:'25px', width:'25px', background:'#65cbfe'}
+                    },
+                ],
+                dataAnalyse:{},
+                ratio:[],
+                monthAnalyse:{},
+                dataList:[],
+                NdataAnalyse:{},
+                dataNList:[],
+                distributionAnalyse:{},
+                flag:false
+            }
+        },
+        mounted() {
+            this.getMyData();
+            var browser = navigator.appName;
+            var b_version = navigator.appVersion;
+            var version = b_version.split(";");
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            var speed = 100;
+            var marquee = document.getElementById("marquee");
+            var marquee1 = document.getElementById("marquee1");
+            var marquee2 = document.getElementById("marquee2");
+            var marqueeVal = setInterval(() => {
+                this.marqueeImpl()
+            }, speed);
+            marquee.onmouseover = () => {
+                clearInterval(marqueeVal);
+            };
+            marquee.onmouseout = () => {
+                marqueeVal = setInterval(() => {
+                    this.marqueeImpl()
+                }, speed);
+            };
+
+            var marqueeN = document.getElementById("marqueeN");
+            var marqueeN1 = document.getElementById("marqueeN1");
+            var marqueeN2 = document.getElementById("marqueeN2");
+            var marqueeValN = setInterval(() => {
+                this.marqueeImpNl();
+            }, speed);
+            marqueeN.onmouseover = () => {
+                clearInterval(marqueeValN);
+            };
+            marqueeN.onmouseout = () => {
+                marqueeValN = setInterval(() => {
+                    this.marqueeImpNl();
+                }, speed);
+            };
+        },
+        methods: {
+            //  定时器的方法
+            marqueeImpl() {
+                //之后发现，这种方式不兼容所有的浏览器，比如ie6 ie7 和搜狗，他们获取的offsetTop 参照物不是父级容器，而是浏览器最外层 ，所以需要额外判断浏览器是ie6 ie7还是搜狗。
+                if (navigator.userAgent.toLowerCase().indexOf("metasr") != -1 || (this.browser == "Microsoft Internet Explorer" && (trim_Version == "MSIE7.0" || trim_Version == "MSIE6.0"))) {
+                    if (marquee2.offsetTop - marquee.scrollTop <= 0) {
+                        marquee.scrollTop -= marquee1.offsetHeight;
+                    } else {
+                        marquee.scrollTop++;
+                    }
+                } else {
+                    if (marquee2.offsetTop - marquee.offsetTop - marquee.scrollTop <= 0) {
+                        marquee.scrollTop -= marquee1.offsetHeight;
+                    } else {
+                        marquee.scrollTop++;
+                    }
+                }
+            },
+            marqueeImpNl() {
+                if (navigator.userAgent.toLowerCase().indexOf("metasr") != -1 || (this.browser == "Microsoft Internet Explorer" && (trim_Version == "MSIE7.0" || trim_Version == "MSIE6.0"))) {
+                    if (marqueeN2.offsetTop - marqueeN.scrollTop <= 0) {
+                        marqueeN.scrollTop -= marqueeN1.offsetHeight;
+                    } else {
+                        marqueeN.scrollTop++;
+                    }
+                } else {
+                    if (marqueeN2.offsetTop - marqueeN.offsetTop - marqueeN.scrollTop <= 0) {
+                        marqueeN.scrollTop -= marqueeN1.offsetHeight;
+                    } else {
+                        marqueeN.scrollTop++;
+                    }
+                }
+            },
+            // 封装的图表
+            LookData(fn, color) {
+                return {
+                    title: {
+                        text: '',
+                        subtext: '',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{b}: {d}%"
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: '',
+                            type: 'pie',
+                            selectedMode: 'single',
+                            radius: [15, 100],
+                            center: ['50%', '50%'],
+                            roseType: 'area',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    textStyle: {
+                                        fontFamily: "SourceHanSansCN-Regular,微软雅黑",
+                                        fontSize: [16],
+                                        color: '#cccccc'
+                                    },
+                                    formatter: (params) => { //避免文字太长做省略处理
+                                        var name = params.name; //名字
+                                        if (name.length > 3) {
+                                            return params.value + '%' + '\n' + name.slice(0, 2);
+                                        } else {
+                                            return params.value + '%' + '\n' + name;
+                                        }
+                                    },
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: true
+                                    }
+                                },
+                            },
+                            data: fn,
+                            color: color
+                        }
+                    ]
+                }
+            },
+        //    获取数据
+            getMyData(){
+                let api='http://106.3.133.117:83';
+                let url=api+'/analyse-guest';
+                let params={
+                    // tag_id:this.tagId
+                };
+                $.get(url,params,res=>{
+                    if(res.code==0){
+                        let data=res.content;
+                        this.dataAnalyse=data.month_analyse.data_analyse;
+                        this.ratio=data.month_analyse.ratio;
+                        this.Nratio=data.year_analyse.ratio;
+                        this.getRcharts();
+                        this.dataList=data.month_analyse.data_list;
+                        this.NdataAnalyse=data.year_analyse.data_analyse;
+                        this.dataNList=data.year_analyse.data_list;
+                        this.distributionAnalyse=data.distribution_analyse;
+                    }else {
+                        this.flag=true;
+                        setTimeout(()=>{
+                            this.flag=false;
+                        },3000)
+                    }
+                })
+            },
+            getRcharts(){
+                var echartsCG = echarts.init(document.getElementById('echartsCG'));
+                var echartsCGData = this.LookData(this.ratio.ecg_ratio, ['#d7ebff', '#add6ff', '#85c2ff', '#5cadff', '#3499ff']);
+                echartsCG.setOption(echartsCGData);
+                var echartsDT = echarts.init(document.getElementById('echartsDT'));
+                var echartsDTData = this.LookData(this.ratio.dcg_ratio, ['#cc5200', '#ffe1cd', '#ffc299', '#ffa467', '#ff8533','#ff6701']);
+                echartsDT.setOption(echartsDTData);
+
+                var echartsXL = echarts.init(document.getElementById('echartsXL'));
+                var echartsXLData = this.LookData(this.ratio.heart_ratio, ['#30efef', '#28caca', '#1b8989']);
+                echartsXL.setOption(echartsXLData);
+
+                var echartsCGN = echarts.init(document.getElementById('echartsCGN'));
+                var echartsCGNData = this.LookData(this.Nratio.ecg_ratio, ['#d7ebff', '#add6ff', '#85c2ff', '#5cadff', '#3499ff']);
+                echartsCGN.setOption(echartsCGNData);
+
+                var echartsDTN = echarts.init(document.getElementById('echartsDTN'));
+                var echartsDTNData = this.LookData(this.Nratio.dcg_ratio, ['#cc5200', '#ffe1cd', '#ffc299', '#ffa467', '#ff8533','#ff6701']);
+                echartsDTN.setOption(echartsDTNData);
+
+                var echartsXLN = echarts.init(document.getElementById('echartsXLN'));
+                var echartsXLNData = this.LookData(this.Nratio.heart_ratio, ['#30efef', '#28caca', '#1b8989']);
+                echartsXLN.setOption(echartsXLNData);
+            },
+        },
+    })
+</script>
+</html>
